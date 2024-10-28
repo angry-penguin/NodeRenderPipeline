@@ -32,7 +32,9 @@ public abstract class SmartComputeBuffer
 
     ~SmartComputeBuffer()
     {
-        ComputeBuffer?.Dispose();
+        // Disposal must be performed on the main thread.
+        // See: https://issuetracker.unity3d.com/issues/player-crashes-when-disposing-computebuffer-from-finalizer
+		MainThreadResourceDisposer.QueueForRelease(ComputeBuffer);	
     }
 
     public void EnsureCapcity(int length)
