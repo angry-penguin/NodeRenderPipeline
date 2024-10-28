@@ -85,6 +85,11 @@ public partial class SetupLightingNode : RenderPipelineNode
 
     public override void Execute(ScriptableRenderContext context, Camera camera)
     {
+#if UNITY_EDITOR
+        Shader.SetGlobalInt("_FlatAmbient", CoreUtils.IsSceneLightingDisabled(camera) ? 1 : 0);
+#endif
+        
+        
         using var directionalShadowRequests = ScopedPooledList<DirectionalShadowRequestData>.Get();
         using var pointShadowRequests = ScopedPooledList<PointLightShadowRequestData>.Get();
         using var spotlightShadowRequests = ScopedPooledList<SpotShadowRequestData>.Get();
