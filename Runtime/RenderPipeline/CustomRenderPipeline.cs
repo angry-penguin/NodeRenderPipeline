@@ -27,7 +27,9 @@ public class CustomRenderPipeline : RenderPipeline
             motionVectors = true,
             overridesEnvironmentLighting = true,
             overridesFog = true,
+#if !UNITY_2022_2_OR_NEWER
             overrideShadowmaskMessage = null,
+#endif
             overridesLODBias = false,
             overridesMaximumLODLevel = false,
             overridesOtherLightingSettings = true,
