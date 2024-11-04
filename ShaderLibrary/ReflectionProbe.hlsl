@@ -22,6 +22,8 @@ uint _ReflectionProbeCount;
 
 float4 SampleReflectionProbe(float3 positionWS, float3 R, float mip, float3 N, float3 albedo, float occlusion, out float3 ambient)
 {
+	if (_FlatAmbient) return 5;
+	
 	// todo: camera relative
 	positionWS += _WorldSpaceCameraPos;
 	
@@ -106,6 +108,8 @@ float4 SampleReflectionProbe(float3 positionWS, float3 R, float mip, float3 N, f
 
 float4 SampleReflectionProbe(float3 positionWS, float3 R, float mip)
 {
+	if (_FlatAmbient) return 5;
+
 	float3 ambient;
 	return SampleReflectionProbe(positionWS, R, mip, 0, 0, 0, ambient);
 }
