@@ -4,6 +4,7 @@
 SamplerState _PointClampSampler;
 float4 _ScaleOffset;
 float _OceanHeight;
+float _MaxCullHeight;
 uint _MipCount, _MipOffset, _Width, _Height;
 
 Texture2D<float> _Input;
@@ -41,7 +42,8 @@ void KERNEL_NAME(uint2 dispatchThreadId : SV_DispatchThreadID, uint2 groupThread
 			{
 				#ifdef FIRST
 					float2 uv = (dispatchThreadId * 4 + uint2(x, y) * 2) * _ScaleOffset.xy + _ScaleOffset.zw;
-					bool4 results0 = _Input.Gather(_PointClampSampler, uv) > _OceanHeight;
+					float4 samples = _Input.Gather(_PointClampSampler, uv);
+					bool4 results0 = samples > _OceanHeight && samples < _MaxCullHeight;
 					Write4(4 * dispatchThreadId + uint2(x, y) * 2, results0, results[0]);
 				#else
 					float2 uv = (dispatchThreadId * 2 + uint2(x, y) * 1) * _ScaleOffset.xy + _ScaleOffset.zw;
