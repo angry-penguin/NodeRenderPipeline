@@ -290,7 +290,7 @@ public partial class ReflectionProbeSystemNode : RenderPipelineNode
         // Temporary approach to avoid reflection "oscilations" where brightness fluctuates very noticably.
         // Does not account for changes in exposure. Could perform a refresh if exposure has changed by 
         // more than a specified amount?
-        if (!probe.alwaysRefresh && !probe.refreshRequested)
+        if (Application.isPlaying && !probe.alwaysRefresh && !probe.refreshRequested)
         {
             return;
         }
