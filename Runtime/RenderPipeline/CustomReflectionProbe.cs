@@ -26,9 +26,13 @@ public class CustomReflectionProbe : MonoBehaviour
     public Vector3 Size { get => size; set => size = value; }
     public Vector3 Offset { get => offset; set => offset = value; }
 
+    public bool alwaysRefresh = true;
+    [HideInInspector] public bool refreshRequested = true;
+
     private void OnEnable()
     {
         reflectionProbes.Add(this);
+        refreshRequested = true;
     }
 
     private void OnDisable()

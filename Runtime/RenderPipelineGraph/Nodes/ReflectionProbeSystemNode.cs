@@ -287,6 +287,15 @@ public partial class ReflectionProbeSystemNode : RenderPipelineNode
         var relightData = readyProbes[index];
         var probe = relightData.Probe;
 
+        // Temporary approach to avoid reflection "oscilations" where brightness fluctuates very noticably.
+        // Does not account for changes in exposure. Could perform a refresh if exposure has changed by 
+        // more than a specified amount?
+        if (!probe.alwaysRefresh && !probe.refreshRequested)
+        {
+            return;
+        }
+        probe.refreshRequested = false;
+
         // Update saved exposure (This value will be used for relighting)
         relightData.exposure = previousExposure;
 
