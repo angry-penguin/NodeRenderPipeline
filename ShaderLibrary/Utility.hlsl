@@ -68,10 +68,11 @@ float3 ApplyExposure(float3 color)
 	#endif
 }
 
-float Remap(float v, float pMin, float pMax, float nMin, float nMax) { return nMin + (v - pMin) / (pMax - pMin) * (nMax - nMin); }
-float2 Remap(float2 v, float2 pMin, float2 pMax, float2 nMin, float2 nMax) { return nMin + (v - pMin) / (pMax - pMin) * (nMax - nMin); }
-float3 Remap(float3 v, float3 pMin, float3 pMax, float3 nMin, float3 nMax) { return nMin + (v - pMin) / (pMax - pMin) * (nMax - nMin); }
-float4 Remap(float4 v, float4 pMin, float4 pMax, float4 nMin, float4 nMax) { return nMin + (v - pMin) / (pMax - pMin) * (nMax - nMin); }
+// Redefinitions - no longer necessary, *assuming* that the new function is equivalent.
+//float Remap(float v, float pMin, float pMax, float nMin, float nMax) { return nMin + (v - pMin) / (pMax - pMin) * (nMax - nMin); }
+//float2 Remap(float2 v, float2 pMin, float2 pMax, float2 nMin, float2 nMax) { return nMin + (v - pMin) / (pMax - pMin) * (nMax - nMin); }
+//float3 Remap(float3 v, float3 pMin, float3 pMax, float3 nMin, float3 nMax) { return nMin + (v - pMin) / (pMax - pMin) * (nMax - nMin); }
+//float4 Remap(float4 v, float4 pMin, float4 pMax, float4 nMin, float4 nMax) { return nMin + (v - pMin) / (pMax - pMin) * (nMax - nMin); }
 
 // Z buffer to linear 0..1 depth (0 at near plane, 1 at far plane).
 // zBufferParam = { (f-n)/n, 1, (f-n)/n*f, 1/f }
