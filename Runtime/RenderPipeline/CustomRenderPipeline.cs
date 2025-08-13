@@ -44,7 +44,7 @@ public class CustomRenderPipeline : RenderPipeline
             rendersUIOverlay = true,
             autoAmbientProbeBaking = false,
             autoDefaultReflectionProbeBaking = false,
-            enlightenLightmapper = false,
+            //enlightenLightmapper = false,
             reflectionProbesBlendDistance = false,
         };
 

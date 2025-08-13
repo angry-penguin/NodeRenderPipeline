@@ -4,6 +4,8 @@ using UnityEngine.Rendering;
 [CreateAssetMenu(menuName = "Data/Graphics/Render Pipeline Asset")]
 public class CustomRenderPipelineAsset : RenderPipelineAsset
 {
+    public override System.Type pipelineType { get { return typeof(CustomRenderPipeline); } }
+        
     [SerializeField] private bool useSRPBatcher = true;
     [SerializeField] private RenderPipelineGraph graph = null;
     [SerializeField] private DefaultPipelineMaterials defaultMaterials = new();

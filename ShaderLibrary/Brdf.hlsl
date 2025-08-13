@@ -138,13 +138,15 @@ float3 LtcLight(PbrInput input, float3 positionWS, LightData lightData, bool isL
 		// Compute the binormal in the local coordinate system.
 		float3 B = normalize(cross(P1, P2));
 
-		float3 result = LTCEvaluate(P1, P2, B, k_identity3x3) * input.albedo * input.opacity;
+		//float3 result = LTCEvaluate(P1, P2, B, k_identity3x3) * input.albedo * input.opacity;
+		float3 result = I_ltc_line(k_identity3x3, lightData.positionWS, lightData.right, lightData.size.x) * input.albedo * input.opacity; // Updated by RT
 		
 		#ifdef REFLECTION_PROBE_RENDERING
 			return result;
 		#endif
 		
-		return result + LTCEvaluate(P1, P2, B, ltcTransformSpecular) * specularFGD * input.f0;
+		//return result + LTCEvaluate(P1, P2, B, ltcTransformSpecular) * specularFGD * input.f0;
+		return result + I_ltc_line(ltcTransformSpecular, lightData.positionWS, lightData.right, lightData.size.x) * specularFGD * input.f0; // Updated by RT
 	}
 	else
 	{
@@ -162,7 +164,8 @@ float3 LtcLight(PbrInput input, float3 positionWS, LightData lightData, bool isL
 		// Polygon irradiance in the transformed configuration.
 		float4x3 LD = mul(lightVerts, k_identity3x3);
 
-		float3 formFactorD = PolygonFormFactor(LD);
+		//float3 formFactorD = PolygonFormFactor(LD);
+		float3 formFactorD = PolygonFormFactor(LD, real3(0,0,0), 4); // Updated by RT
 		float3 result = PolygonIrradianceFromVectorFormFactor(formFactorD) * input.albedo * input.opacity;
 		
 		#ifdef REFLECTION_PROBE_RENDERING
@@ -172,7 +175,8 @@ float3 LtcLight(PbrInput input, float3 positionWS, LightData lightData, bool isL
 		// Evaluate the specular part
 		// Polygon irradiance in the transformed configuration.
 		float4x3 LS = mul(lightVerts, ltcTransformSpecular);
-		float3 formFactorS = PolygonFormFactor(LS);
+		//float3 formFactorS = PolygonFormFactor(LS); 
+		float3 formFactorS = PolygonFormFactor(LS, real3(0,0,0), 4); // Updated by RT
 		return result + PolygonIrradianceFromVectorFormFactor(formFactorS) * specularFGD * input.f0;
 	}
 }
@@ -223,7 +227,7 @@ float3 GetLighting(float4 positionCS, float3 N, float3 T, PbrInput input, out fl
 	float3 irradiance, backIrradiance;
 	
 	float3 iblR = GetSpecularDominantDir(N, R, perceptualRoughness, NdotV);
-	float iblMipLevel = PerceptualRoughnessToMipmapLevel(perceptualRoughness, NdotV);
+	float iblMipLevel = PerceptualRoughnessToMipmapLevel(perceptualRoughness, (real)NdotV); // RT - specify 'real' to avoid call ambiguity
 	float4 probe = SampleReflectionProbe(positionWS, iblR, iblMipLevel, input.bentNormal, input.albedo * input.opacity, input.occlusion, irradiance);
 	float3 radiance = probe.rgb;
 	if (probe.a < 1.0)

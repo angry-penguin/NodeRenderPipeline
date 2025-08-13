@@ -85,7 +85,8 @@ void Scatter(uint3 id : SV_DispatchThreadID)
 		            // Compute the binormal in the local coordinate system.
 				float3 B = normalize(cross(P1, P2));
 
-				light.color *= LTCEvaluate(P1, P2, B, k_identity3x3);
+				//light.color *= LTCEvaluate(P1, P2, B, k_identity3x3);
+				light.color *= I_ltc_line(k_identity3x3, lightData.positionWS, lightData.right, lightData.size.x); // Updated by RT
 			}
 			else
 			{
@@ -103,7 +104,8 @@ void Scatter(uint3 id : SV_DispatchThreadID)
 		            // Polygon irradiance in the transformed configuration.
 				float4x3 LD = mul(lightVerts, k_identity3x3);
 
-				float3 formFactorD = PolygonFormFactor(LD);
+				//float3 formFactorD = PolygonFormFactor(LD);
+				float3 formFactorD = PolygonFormFactor(lightVerts, real3(0,0,0), 4); // Updated by RT
 				light.color *= PolygonIrradianceFromVectorFormFactor(formFactorD);
 			}
 		}
