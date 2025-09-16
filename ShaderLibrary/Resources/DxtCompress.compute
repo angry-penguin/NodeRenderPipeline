@@ -470,7 +470,7 @@ void GetIndicesAlpha(float block[16], float minA, float maxA, inout uint2 packed
 	packed.y |= (index >> 1);
 
 	shift = 2;
-	for (i = 6; i < 16; ++i)
+	for (uint i = 6; i < 16; ++i)
 	{
 		index = round((block[i] - maxA) * stepInc);
 		index += (index > 0) - (7 * (index == 7));
@@ -736,7 +736,7 @@ void BC3Compress(uint2 threadIDWithinDispatch : SV_DispatchThreadID,
 		
 	// Convert
 	float blockR[16];
-	for (i = 0; i < 16; i++)
+	for (uint i = 0; i < 16; i++)
 	{
 		blockR[i] = blockRGB[i].r;
 	}
@@ -749,7 +749,7 @@ void BC3Compress(uint2 threadIDWithinDispatch : SV_DispatchThreadID,
 	{
 		uint2 texelID = uint2(threadIndexWithinGroup % MIP1_BLOCKS_PER_ROW, threadIndexWithinGroup / MIP1_BLOCKS_PER_ROW);
 		
-		for (i = 0; i < 16; i++)
+		for (uint i = 0; i < 16; i++)
 		{
 			blockR[i] = gs_mip1BlocksRGB[threadIndexWithinGroup][i].r;
 		}

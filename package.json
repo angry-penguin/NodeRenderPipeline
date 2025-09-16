@@ -8,5 +8,6 @@
     "com.unity.render-pipelines.core": "12.1.7",
     "com.arycama.nodegraph": "1.0.1"
   },
-  "type": "sample"
+  "type": "sample",
+  "_fingerprint": "32879ff85a20ee460913b2fbc38945e3d449c120"
 }

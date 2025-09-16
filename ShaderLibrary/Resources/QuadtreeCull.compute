@@ -74,19 +74,19 @@ void InstanceCull(uint2 groupThreadId : SV_GroupThreadID, uint groupIndex : SV_G
 					float2 heights = _TerrainHeights.SampleLevel(_PointClampSampler, heightmapUv, _MipCount - (i + _PassOffset)).gr - _WorldSpaceCameraPos.y;
 				#endif
 				
-				float2 patchSize = _TerrainPositionOffset.xy * exp2(-(i + _PassOffset));
+				float2 patchSize = _TerrainPositionOffset.xy * exp2(-(i + _PassOffset)); 
 				float3 center = float3((coord + 0.5) * patchSize + _TerrainPositionOffset.zw, 0.5 * (heights.y + heights.x)).xzy;
 				float3 extents = float3(patchSize, heights.y - heights.x).xzy * 0.5;
 				
 				#ifdef HI_Z_CULL
 					if(!HiZCull(center - extents, extents * 2, _ScreenSize.xy, _WorldToScreen))
-						return false;
+						return;// false;
 				#endif
 				
 				if (FrustumCull(center, extents))
 				{
 					float factor = ProjectedSphereRadius(length(extents), center) * _ScreenSize.x * 0.5 / _EdgeLength;
-					if (factor <= 1.0 || i + _PassOffset == _TotalPassCount - 1)
+					if (_or(factor <= 1.0, i + _PassOffset == _TotalPassCount - 1))
 					{
 						// If equal to or smaller than the target size, write the lod data.
 						int offset;
@@ -104,7 +104,7 @@ void InstanceCull(uint2 groupThreadId : SV_GroupThreadID, uint groupIndex : SV_G
 			}
 		}
 			
-		GroupMemoryBarrierWithGroupSync();
+		//GroupMemoryBarrierWithGroupSync();
 		
 		if (all(groupThreadId < maxThread))
 		{
@@ -122,7 +122,7 @@ void InstanceCull(uint2 groupThreadId : SV_GroupThreadID, uint groupIndex : SV_G
 			}
 		}
 		
-		GroupMemoryBarrierWithGroupSync();
+		//GroupMemoryBarrierWithGroupSync();
 	}
 	
 	// For non-final pass, write out the data from this cell to a temp texture so it can be read in the next pass
@@ -137,7 +137,7 @@ void InstanceCull(uint2 groupThreadId : SV_GroupThreadID, uint groupIndex : SV_G
 	if(groupIndex == 0)
         InterlockedAdd(_IndirectArgs[1], _CellCounter, _WriteOffset);
 	
-	GroupMemoryBarrierWithGroupSync();
+	//GroupMemoryBarrierWithGroupSync();
 	
 	if(groupIndex >= _CellCounter)
 		return;
@@ -158,16 +158,16 @@ void InstanceCull(uint2 groupThreadId : SV_GroupThreadID, uint groupIndex : SV_G
 		int2 left = int2(dataColumn - offset, dataRow + 0);
 		int2 down = int2(dataColumn + 0, dataRow - offset);
 	
-		if (all(right >= 0 && right < _ThreadCount))
+		if (all(_and(right >= 0, right < _ThreadCount)))
 			cellData |= (max(0, (int)_CellLods[right.x][right.y] - lod) & 0x3) << 24;
 	
-		if (all(up >= 0 && up < _ThreadCount))
+		if (all(_and(up >= 0, up < _ThreadCount)))
 			cellData |= (max(0, (int)_CellLods[up.x][up.y] - lod) & 0x3) << 26;
 	
-		if (all(left >= 0 && left < _ThreadCount))
+		if (all(_and(left >= 0, left < _ThreadCount)))
 			cellData |= (max(0, (int)_CellLods[left.x][left.y] - lod) & 0x3) << 28;
 	
-		if (all(down >= 0 && down < _ThreadCount))
+		if (all(_and(down >= 0, down < _ThreadCount)))
 			cellData |= (max(0, (int)_CellLods[down.x][down.y] - lod) & 0x3) << 30;
 	#endif
 	
@@ -207,16 +207,16 @@ void CalculateLod(uint id : SV_DispatchThreadID)
 	int2 left = int2(dataColumn - offset, dataRow + 0);
 	int2 down = int2(dataColumn + 0, dataRow - offset);
 	
-	if (all(right >= 0 && right < _CellCount))
+	if (all(_and(right >= 0, right < _CellCount)))
 		cellData |= (max(0, int(_LodInput[right]) - lod) & 0x3) << 24;
 	
-	if (all(up >= 0 && up < _CellCount))
+	if (all(_and(up >= 0, up < _CellCount)))
 		cellData |= (max(0, int(_LodInput[up]) - lod) & 0x3) << 26;
 	
-	if (all(left >= 0 && left < _CellCount))
+	if (all(_and(left >= 0, left < _CellCount)))
 		cellData |= (max(0, int(_LodInput[left]) - lod) & 0x3) << 28;
 	
-	if (all(down >= 0 && down < _CellCount))
+	if (all(_and(down >= 0, down < _CellCount)))
 		cellData |= (max(0, int(_LodInput[down]) - lod) & 0x3) << 30;
 	
 	_PatchDataWrite[id] = cellData;

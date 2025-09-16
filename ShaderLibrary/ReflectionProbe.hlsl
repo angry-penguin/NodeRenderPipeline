@@ -51,7 +51,7 @@ float4 SampleReflectionProbe(float3 positionWS, float3 R, float mip, float3 N, f
 		if (isBox)
 		{
 			float3 localR = MultiplyVector(probe.worldToLocal, R, false);
-			float3 factors = ((localR >= 0.0 ? 1.0 : -1.0) - (localPosition)) / localR;
+			float3 factors = ((_select(localR >= 0.0, 1.0, -1.0)) - (localPosition)) / localR;
 			float scalar = Min3(factors);
 			R = localR * scalar + (localPosition - 0.0);
 			R = MultiplyVector(probe.localToWorld, R, false);

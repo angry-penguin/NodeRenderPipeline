@@ -42,8 +42,8 @@ public class CustomRenderPipeline : RenderPipeline
             rendererPriority = false,
             rendererProbes = false,
             rendersUIOverlay = true,
-            autoAmbientProbeBaking = false,
-            autoDefaultReflectionProbeBaking = false,
+            ambientProbeBaking = false,
+            defaultReflectionProbeBaking = false,
             //enlightenLightmapper = false,
             reflectionProbesBlendDistance = false,
         };

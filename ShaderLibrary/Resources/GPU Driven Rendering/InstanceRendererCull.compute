@@ -73,7 +73,7 @@ void Visibility(uint id : SV_DispatchThreadID)
 	// Determine correct lod
 	uint lod = UINT_MAX;
 	float radius = ProjectedSphereRadius(instanceTypeData.radius * scale, spherePositionWS);
-	for (i = 0; i < instanceTypeData.lodCount; i++)
+	for (uint i = 0; i < instanceTypeData.lodCount; i++)
 	{
 		float lodSize = _LodSizes[i + instanceTypeData.lodSizeBufferPosition];
 		if (radius <= lodSize)
@@ -97,7 +97,7 @@ void Visibility(uint id : SV_DispatchThreadID)
 	InstanceTypeLodData instanceTypeLodData = _InstanceTypeLodData[instanceTypeData.lodRendererOffset + lod];
 	
 	// Determine if each renderer for this lod is visible
-	for (i = 0; i < instanceTypeLodData.rendererCount; i++)
+	for (uint i = 0; i < instanceTypeLodData.rendererCount; i++)
 	{
 		// Fetch renderer bounds, transform to world space
 		Bounds bounds = _RendererBounds[instanceTypeLodData.rendererStart + i];

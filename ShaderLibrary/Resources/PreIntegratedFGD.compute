@@ -5,7 +5,7 @@
 #pragma kernel AverageAlbedo
 #pragma kernel DirectionalAlbedoMs
 #pragma kernel AverageAlbedoMs
-#pragma kernel SpecularOcclusion
+#pragma kernel PIFSpecularOcclusion
 
 RWTexture3D<float> _DirectionalAlbedoMsResult;
 RWTexture2D<float2> _DirectionalAlbedoResult;
@@ -137,7 +137,7 @@ uint _SpecularOcclusionResolution;
 RWTexture3D<float> _SpecularOcclusionResult;
 
 [numthreads(8, 8, 8)]
-void SpecularOcclusion(uint3 id : SV_DispatchThreadID)
+void PIFSpecularOcclusion(uint3 id : SV_DispatchThreadID)
 {
 	uint z = id.z % _SpecularOcclusionResolution;
 	uint w = id.z / _SpecularOcclusionResolution;

@@ -127,7 +127,7 @@ void Scatter(uint3 id : SV_DispatchThreadID)
 	previousClip.xy = previousClip.xy * 0.5 + 0.5;
 	previousClip.z = RangeRemap(_ProjectionParams.y, _VolumeDepth, previousClip.z);
 	
-	if (all(previousClip >= 0.0 && previousClip <= 1.0))
+	if (all(_and(previousClip >= 0.0, previousClip <= 1.0)))
 	{
 		previousClip *= float3(_ScreenSize.xy, _VolumeSlices);
 		previousClip.xy /= _VolumeTileSize;

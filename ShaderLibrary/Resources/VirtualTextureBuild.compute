@@ -176,7 +176,7 @@ void VirtualTextureBuild(uint2 id : SV_DispatchThreadID)
 	float weightSum = 0;
 	
 	[unroll]
-	for (i = 0; i < 6; i++)
+	for (uint i = 0; i < 6; i++)
 	{
 		uint layerIndex = layerIndices[i];
 		float weight = 0.0;

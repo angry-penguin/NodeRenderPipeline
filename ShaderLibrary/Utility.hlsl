@@ -278,11 +278,11 @@ float3 ClipToAABB(float3 history, float3 current, float3 center, float3 extents)
 	float3 intersection = ((center - sign(direction) * extents) - history) / direction;
 
     // clip unexpected T values
-	float3 possibleT = intersection >= 0.0 ? intersection : 100.0 + 1.0;
+	float3 possibleT = _select(intersection >= 0.0, intersection, 100.0 + 1.0);
 	float t = min(100, Min3(possibleT));
 
     // final history colour
-	return float3(t < 100 ? history + direction * t : history);
+	return float3(_select(t < 100, history + direction * t, history));
 }
 
 float4 ClipToAABB(float4 history, float4 center, float4 extents)
@@ -303,7 +303,7 @@ float3 ClipHistory(float3 history, float3 color, float3 center, float3 extents, 
 {
 	float3 rayDirection = (color - history);
 	float3 rcpDir = rcp(rayDirection);
-	float tmin = Min3((center + (rcpDir >= 0.0 ? -extents : extents) - history) * rcpDir);
+	float tmin = Min3((center + (_select(rcpDir >= 0.0, -extents, extents)) - history) * rcpDir);
 	wasClipped = tmin > 0.0;
 	return clamp(history + rayDirection * max(0.0, tmin), center - extents, center + extents);
 }

@@ -23,7 +23,7 @@ struct VertexInput
 struct FragmentInput
 {
     float4 positionCS : SV_Position;
-    float3 positionWS : POSITION1;
+    float3 positionWS : TEXCOORD5; // Changed from POSITION1 to TEXCOORD5 for platform compatibility.
     float3 uv : TEXCOORD;
     float4 color : COLOR;
     float3 normal : NORMAL;

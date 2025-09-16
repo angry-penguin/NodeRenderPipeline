@@ -172,7 +172,7 @@ void Temporal(uint2 id : SV_DispatchThreadID)
 	float _DepthRejection = 5.0, _VelocityRejection = 10.0;
 	
 	[unroll]
-	for (y = 0; y < 2; y++)
+	for (uint y = 0; y < 2; y++)
 	{
 		[unroll]
 		for (int x = 0; x < 2; x++)

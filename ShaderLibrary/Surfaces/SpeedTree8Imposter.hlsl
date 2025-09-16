@@ -26,8 +26,8 @@ struct FragmentInput
 	float4 uvViewDir[3] : TEXCOORD1;
 	
 #ifdef MOTION_VECTORS_ON
-	float4 nonJitteredPositionCS : POSITION1;
-	float4 previousPositionCS : POSITION2;
+	float4 nonJitteredPositionCS : TEXCOORD6; // Changed from POSITION1 for platform compatibility.
+	float4 previousPositionCS : TEXCOORD7; // Changed from POSITION2 for platform compatibility.
 #endif
 	
 	uint instanceID : SV_InstanceID;

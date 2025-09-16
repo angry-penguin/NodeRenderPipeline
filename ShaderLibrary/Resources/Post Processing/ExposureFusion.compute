@@ -1,4 +1,4 @@
-#pragma kernel Luminance
+#pragma kernel EFLuminance
 #pragma kernel Blend
 #pragma kernel BlendLaplacian
 #pragma kernel FinalCombinePass
@@ -15,7 +15,7 @@ float _Shadows, _Highlights, _Mip, _SigmaSq, _BoostLocalContrast, _Compensation;
 uint _MaxWidth, _MaxHeight;
 
 [numthreads(8, 8, 1)]
-void Luminance(uint2 id : SV_DispatchThreadID)
+void EFLuminance(uint2 id : SV_DispatchThreadID)
 {
 	 // Tonemap three syntetic exposures and produce their luminances.
 	float3 color = _Original[id] * _Compensation;

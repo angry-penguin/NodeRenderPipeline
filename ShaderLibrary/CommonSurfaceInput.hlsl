@@ -44,8 +44,8 @@ struct FragmentInput
 	float4 positionCS : SV_POSITION;
 	
 	#ifdef MOTION_VECTORS_ON
-		float4 nonJitteredPositionCS : POSITION3;
-		float4 previousPositionCS : POSITION4;
+		float4 nonJitteredPositionCS : TEXCOORD6; // Was POSITION3, not valid on some platforms. Changed to TEXCOORD6.
+		float4 previousPositionCS : TEXCOORD7; // Was POSITION4, not valid on some platforms. Changed to TEXCOORD7.
 	#endif
 	
 	FRAGMENT_WORLD_POSITION_INPUT
@@ -61,7 +61,7 @@ struct FragmentInput
 	FRAGMENT_COLOR_INPUT
 	
 	#ifdef SHADER_STAGE_FRAGMENT
-		bool isFrontFace : SV_IsFrontFace;
+		bool isFrontFace : XIsFrontFace; // Was SV_IsFrontFace. Renamed to XIsFrontFace to avoid conflict with Fragment(...) argument in CommonSurface.hlsl.
 	#endif
 };
 

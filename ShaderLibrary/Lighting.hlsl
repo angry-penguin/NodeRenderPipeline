@@ -46,6 +46,8 @@ float _WaterShadowFar;
 uint _BlockerSamples;
 uint _PcfSamples;
 
+
+
 struct LightCommon
 {
     float3 color;
@@ -70,18 +72,18 @@ float VoxelGI(float3 positionWS, float3 normalWS)
     #ifdef VOXEL_GI_ON
 		float3 voxelPos = MultiplyPoint(_WorldToVoxel, positionWS).xyz;
 
-		if(all(voxelPos > 0.0 && voxelPos < 1.0))
+		if(all(_and(voxelPos > 0.0, voxelPos < 1.0)))
 		{
 			float3 uv = voxelPos;
 
 			// Convert to integer, wrap, convert back to normalized
-			uv = mod(uv * _VoxelResolution + _VoxelOffset, _VoxelResolution);
+			uv = _mod(uv * _VoxelResolution + _VoxelOffset, _VoxelResolution);
         
             // Offset based on normal
 		    uv = floor(uv + normalWS * IntersectRayAABBSimple(frac(uv), normalWS, 0, 1)) + 0.5;
             uv /= _VoxelResolution;
 
-			float3 nSquared = normalWS * normalWS, isNegative = normalWS < 0.0 ? 0.5 : 0.0;;
+			float3 nSquared = normalWS * normalWS, isNegative = _select(normalWS < 0.0, 0.5, 0.0);;
 			uv.z *= 0.5;
 			float3 tcz = uv.zzz + isNegative;
 
@@ -99,12 +101,12 @@ float VoxelOcclusion(float3 positionWS)
     #ifdef VOXEL_GI_ON
 		float3 voxelPos = MultiplyPoint(_WorldToVoxel, positionWS).xyz;
 
-		if(all(voxelPos > 0.0 && voxelPos < 1.0))
+		if(all(_and(voxelPos > 0.0, voxelPos < 1.0)))
 		{
 			float3 uv = voxelPos;
 
 			// Convert to integer, wrap, convert back to normalized
-			uv = mod(uv * _VoxelResolution + _VoxelOffset, _VoxelResolution) / _VoxelResolution;
+			uv = _mod(uv * _VoxelResolution + _VoxelOffset, _VoxelResolution) / _VoxelResolution;
     
             return _VoxelOcclusion.SampleLevel(_LinearRepeatSampler, uv, 0.0);
 		}
@@ -243,7 +245,7 @@ float DirectionalLightShadow(float3 positionWS, uint shadowIndex, float jitter =
 		float3x4 cascadeData = _DirectionalShadowMatrices[slice];
 		float3 positionLS = MultiplyPoint3x4(cascadeData, positionWS);
 
-		if (any(positionLS < 0.0 || positionLS > 1.0))
+		if (any(_or(positionLS < 0.0, positionLS > 1.0)))
 			continue;
 
 		if (exponentialShadows)

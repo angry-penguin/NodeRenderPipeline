@@ -29,7 +29,7 @@ void VoxelAO(uint3 id : SV_DispatchThreadID, uint groupId : SV_GroupIndex)
 	float3 direction = SampleSphereUniform(u.x, u.y);
 	
 	float3 position = mod(id - _VoxelOffset, _VoxelResolution);
-	float3 rayStep = direction >= 0 ? 1 : -1;
+	float3 rayStep = _select(direction >= 0, 1, -1);
 	float3 tDelta = rayStep / direction;
 	float3 tMax = tDelta;
 	
@@ -43,7 +43,7 @@ void VoxelAO(uint3 id : SV_DispatchThreadID, uint groupId : SV_GroupIndex)
 		tMax += tDelta * (tMax == minT);
 		
 		// If out of bounds, assume we have reached the sky
-		if (any(position < 0.0 || position >= _VoxelResolution))
+		if (any(_or(position < 0.0, position >= _VoxelResolution)))
 		{
 			break;
 		}
@@ -67,7 +67,7 @@ void VoxelAO(uint3 id : SV_DispatchThreadID, uint groupId : SV_GroupIndex)
 	float4 dirResult = result;
 	
 	// Remove very small values (Allows to reach fully black or white
-	dirResult = dirResult < 1e-2 ? 0.0 : (dirResult > 1.0 - 1e2 ? 1.0 : dirResult);
+	dirResult = _select(dirResult < 1e-2, 0.0, (_select(dirResult > 1.0 - 1e2, 1.0, dirResult)));
 	
 	// Weigh result by direction, so that firing rays in one direction won't affect unrelated directions
 	dirResult.xyz = lerp(previous.xyz, dirResult.xyz, Square(direction));
@@ -106,7 +106,7 @@ void Debug(uint2 id : SV_DispatchThreadID)
 		float3 position = rayStart + rayStep * i;
 		float4 voxelPos = MultiplyPoint(_WorldToVoxel, position);
 		
-		if(all(voxelPos.xyz > 0 && voxelPos.xyz < 1))
+		if(all(_and(voxelPos.xyz > 0, voxelPos.xyz < 1)))
 		{
 			transmittance *= exp(-_VoxelOpacity.SampleLevel(_PointClampSampler, voxelPos.xyz, 0.0) * _Opacity * ds);
 		}

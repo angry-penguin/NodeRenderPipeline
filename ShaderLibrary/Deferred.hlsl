@@ -37,10 +37,10 @@ struct GBufferOut
 
 uint2 MirrorClamp(int2 uv, uint2 resolution)
 {
-	uv = uv < 0 ? -uv - 1 : uv;
+	uv = _select(uv < 0, -uv - 1, uv);
 	bool2 flip = (uv / resolution) & 1;
 	uv %= resolution;
-	return flip ? resolution - uv - 1 : uv;
+	return _select(flip, resolution - uv - 1, uv);
 }
 
 float2 GBufferPerceptualRoughness(float4 data)

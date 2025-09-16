@@ -45,7 +45,7 @@
 
 // To use a feature, simply define "REQUIRES_FRAGMENT_UV2", replace UV2 with NORMAL, TANGENT, COLOR, or whatever else you need
 #ifdef REQUIRES_VERTEX_POSITION
-	#define VERTEX_POSITION_INPUT float3 positionOS : POSITION0;
+	#define VERTEX_POSITION_INPUT float4 positionOS : POSITION; // Was float3 POSITION0. Changed to float4 for improved platform compatibility. Note is mapped to SV_POSITION by compiler flags.
 #else
 	#define VERTEX_POSITION_INPUT
 #endif
@@ -99,7 +99,7 @@
 #endif
 
 #ifdef REQUIRES_FRAGMENT_WORLD_POSITION
-	#define FRAGMENT_WORLD_POSITION_INPUT float3 positionWS : POSITION1;
+	#define FRAGMENT_WORLD_POSITION_INPUT float3 positionWS : TEXCOORD5; // Was POSITION1, not valid on some platforms. Changed to TEXCOORD5.
 #else
 	#define FRAGMENT_WORLD_POSITION_INPUT
 #endif

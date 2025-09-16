@@ -333,8 +333,8 @@ void Spatial(uint2 dispatchThreadId : SV_DispatchThreadID, uint2 groupThreadId :
 		float2 pixel = floor(WorldToPixel(samplePosition, false)) + 0.5;
 		
 		// Flip the offset for out of bounds pixels, rather than discarding or clamping them
-		bool2 flip = pixel < 0.0 || pixel >= _ScreenSize.xy;
-		p.xy = flip ? -p.xy : p.xy;
+		bool2 flip = _or(pixel < 0.0, pixel >= _ScreenSize.xy);
+		p.xy = _select(flip, -p.xy, p.xy);
 		samplePosition = mul(p, frame) + positionWS;
 		pixel = floor(WorldToPixel(samplePosition, false)) + 0.5;
 		

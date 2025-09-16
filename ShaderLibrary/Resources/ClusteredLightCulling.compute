@@ -85,7 +85,7 @@ void ClusteredLighting(uint3 id : SV_DispatchThreadId, uint groupIndex : SV_Grou
 	{
 		InterlockedAdd(_LightCounter[0], lightCount, lightOffset);
 
-		for (i = 0; i < lightCount; i++)
+		for (uint i = 0; i < lightCount; i++)
 		{
 			_LightClusterListWrite[lightOffset + i] = _LightIndices[groupIndex][i];
 		}

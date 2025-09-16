@@ -38,7 +38,7 @@ void ConvertAndBlur(uint3 dispatchThreadId : SV_DispatchThreadID, uint2 groupThr
 	float weights[5] = { 0.1531703, 0.1448929, 0.1226492, 0.0929025, 0.06297021 };
 	
 	[unroll]
-	for (y = -4; y <= 4; y++)
+	for (int y = -4; y <= 4; y++)
 	{
 		[unroll]
 		for (int x = -4; x <= 4; x++)

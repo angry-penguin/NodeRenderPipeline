@@ -7,6 +7,29 @@
 	#define INSTANCING_ON
 #endif
 
+/* Unity uses FXC with HLSL 2018 for most platforms, and DXC with HLSL 2021 
+ * for at least one. In the latter case there are changes to &&, || and ?: 
+ * operators which make then incompatible with vector types. The and(), or() 
+ * and select() intrinsics are provided to retain the previous behaviour. 
+ * This define and the associated code updates are to maintain compatibility 
+ * with both configurations.
+ * NOTE: The define refers to the compiler, but the compatibility issue is 
+ * actually with the HLSL version. This approach is applied as it seems to be 
+ * the solution adopted by Unity in the HDRP codebase.
+ */
+#if defined(UNITY_COMPILER_DXC)
+	#define _or(x,y) or((x), (y))
+	#define _and(x,y) and((x), (y))
+	#define _select(c,x,y) select((c), (x), (y))
+#else
+	#define _or(x,y) ((x) || (y))
+	#define _and(x,y) ((x) && (y)) 
+	#define _select(c,x,y) ((c) ? (x) : (y))
+#endif 
+
+/* Equivalent to GLSL mod(...). */
+float _mod(float x, float y) {	return x - y * floor(x/y); } 
+
 cbuffer UnityPerCamera
 {
 	float4 _Time; // (t/20, t, t*2, t*3)

@@ -27,7 +27,7 @@ public class AdditionalLightData : MonoBehaviour
     private void Update()
     {
         // Manually track whether this is an area light, for reasons below
-        if (lightComponent.type == LightType.Area)
+        if (lightComponent.type == LightType.Rectangle)
             areaLightType = AreaLightType.Area;
 
         // Force area lights to be spot types.. this is because Unity does not render shadows for Area lights, so we must treat them as point lights for the engine..

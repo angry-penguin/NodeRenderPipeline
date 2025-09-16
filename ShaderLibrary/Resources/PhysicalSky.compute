@@ -301,7 +301,7 @@ void Temporal(uint2 id : SV_DispatchThreadID)
 	// Sample history
 	float3 previousScatter, previousTransmittance;
 	float newFrameCount = 0.0;
-	if (all(previousUv >= 0.0 && previousUv <= 1.0))
+	if (all(_and(previousUv >= 0.0, previousUv <= 1.0)))
 	{
 		float oldFrameCount = _PrevFrameCount.SampleLevel(_PointClampSampler, previousUv, 0.0) * 255.0;
 		

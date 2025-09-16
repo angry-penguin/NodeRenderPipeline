@@ -1,7 +1,9 @@
 ﻿#pragma kernel ComputeMaskFirst KERNEL_NAME=ComputeMaskFirst FIRST
 #pragma kernel ComputeMask KERNEL_NAME=ComputeMask
 
-SamplerState _PointClampSampler;
+#include "Packages/com.arycama.noderenderpipeline/ShaderLibrary/Core.hlsl"
+
+//SamplerState _PointClampSampler; Included via Core.hlsl
 float4 _ScaleOffset;
 float _OceanHeight;
 float _MaxCullHeight;
@@ -43,7 +45,7 @@ void KERNEL_NAME(uint2 dispatchThreadId : SV_DispatchThreadID, uint2 groupThread
 				#ifdef FIRST
 					float2 uv = (dispatchThreadId * 4 + uint2(x, y) * 2) * _ScaleOffset.xy + _ScaleOffset.zw;
 					float4 samples = _Input.Gather(_PointClampSampler, uv);
-					bool4 results0 = samples > _OceanHeight && samples < _MaxCullHeight;
+					bool4 results0 = _and(samples > _OceanHeight, samples < _MaxCullHeight);
 					Write4(4 * dispatchThreadId + uint2(x, y) * 2, results0, results[0]);
 				#else
 					float2 uv = (dispatchThreadId * 2 + uint2(x, y) * 1) * _ScaleOffset.xy + _ScaleOffset.zw;
@@ -81,7 +83,7 @@ void KERNEL_NAME(uint2 dispatchThreadId : SV_DispatchThreadID, uint2 groupThread
 			uint2 maxThread = _GroupSize >> i;
 		#endif
 		
-		if (!outOfBounds && all(groupThreadId < maxThread))
+		if (_and(!outOfBounds, all(groupThreadId < maxThread)))
 		{
 			bool isValid;
 			

@@ -23,7 +23,7 @@ bool FrustumCull(float3 center, float3 extents)
 	for (uint i = 0; i < _CullingPlanesCount; i++)
 	{
 		float4 plane = _CullingPlanes[i];
-		float3 p = center + (plane.xyz >= 0 ? extents : -extents);
+		float3 p = center + (_select(plane.xyz >= 0, extents, -extents));
 		if (DistanceFromPlane(p, plane) < 0)
 			return false;
 	}
@@ -45,7 +45,7 @@ bool HiZCull(float3 screenMin, float3 screenMax, float2 resolution)
 	float2 dims = b - a;
  
     // Use the lower level if we only touch <= 2 texels in both dimensions
-	if (dims.x <= 2.0 && dims.y <= 2.0)
+	if (_and(dims.x <= 2.0, dims.y <= 2.0))
 		mip = levelLower;
 	
 	if (mip < _MaxHiZMip)

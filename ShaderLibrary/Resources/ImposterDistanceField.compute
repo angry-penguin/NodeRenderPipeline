@@ -19,7 +19,7 @@ float _InvCellSize, _InvResolution, _MaxDistance;
 bool IsOutOfBounds(int2 position, int2 offset)
 {
 	int2 offsetPosition = position + offset;
-	if (any(offsetPosition < 0 || offsetPosition >= _Resolution))
+	if (any(_or(offsetPosition < 0, offsetPosition >= _Resolution)))
 		return true;
 	
 	return false;
