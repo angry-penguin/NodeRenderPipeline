@@ -38,7 +38,6 @@ groupshared uint _CellCounter, _WriteOffset;
 [numthreads(_ThreadCount, _ThreadCount, 1)]
 void InstanceCull(uint2 groupThreadId : SV_GroupThreadID, uint groupIndex : SV_GroupIndex, uint2 dispatchThreadId : SV_DispatchThreadID, uint2 groupId : SV_GroupID)
 {
-
 	// Initialize the shared cell counter to zero
 	if (groupIndex == 0)
 		_CellCounter = 0;
@@ -138,7 +137,7 @@ void InstanceCull(uint2 groupThreadId : SV_GroupThreadID, uint groupIndex : SV_G
 	if(groupIndex == 0)
         InterlockedAdd(_IndirectArgs[1], _CellCounter, _WriteOffset);
 	
-	//GroupMemoryBarrierWithGroupSync();
+	GroupMemoryBarrierWithGroupSync();
 	
 	if(groupIndex >= _CellCounter)
 		return;
