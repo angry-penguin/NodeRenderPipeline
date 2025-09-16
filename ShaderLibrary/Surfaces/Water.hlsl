@@ -52,13 +52,14 @@ cbuffer UnityPerMaterial
 
 struct VertexInput
 {
+	float4 positionCS : POSITION;
 	uint instanceID : SV_InstanceID;
 	uint vertexID : SV_VertexID;
 };
 
 struct HullInput
 {
-	float3 position : TEXCOORD;
+	float4 position : POSITION;
 	uint4 patchData : TEXCOORD1; // col, row, lod, deltas
 };
 
@@ -79,8 +80,8 @@ struct FragmentInput
 {
 	float4 positionCS : SV_POSITION;
 	float4 uv0 : TEXCOORD0;
-	float4 nonJitteredPositionCS : POSITION2;
-	float4 previousPositionCS : POSITION3;
+	float4 nonJitteredPositionCS : TEXCOORD6; // Was POSITION2, not valid on some platforms. Changed to TEXCOORD6.
+	float4 previousPositionCS : TEXCOORD7; // Was POSITION3, not valid on some platforms. Changed to TEXCOORD7.
 };
 
 struct FragmentOutput
@@ -92,6 +93,7 @@ struct FragmentOutput
 
 bool CheckTerrainMask(float3 p0, float3 p1, float3 p2, float3 p3)
 {
+return true;
 	float2 bl = TRANSFORM_TEX(p0.xz, _OceanTerrainMask);
 	float2 br = TRANSFORM_TEX(p3.xz, _OceanTerrainMask);
 	float2 tl = TRANSFORM_TEX(p1.xz, _OceanTerrainMask);
@@ -225,7 +227,7 @@ HullInput Vertex(VertexInput input)
 	float3 positionWS = float3(float2(dataColumn + x * _RcpVerticesPerEdgeMinusOne, dataRow + y * _RcpVerticesPerEdgeMinusOne) * exp2(lod) * _PatchScaleOffset.xy + _PatchScaleOffset.zw, -_WorldSpaceCameraPos.y).xzy;
 	
 	HullInput output;
-	output.position = positionWS;
+    output.position = float4(positionWS, 1);
 	output.patchData = uint4(col, row, lod, cellData);
 	return output;
 }

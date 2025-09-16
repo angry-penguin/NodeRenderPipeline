@@ -736,9 +736,9 @@ void BC3Compress(uint2 threadIDWithinDispatch : SV_DispatchThreadID,
 		
 	// Convert
 	float blockR[16];
-	for (uint i = 0; i < 16; i++)
+	for (uint j = 0; j < 16; j++)
 	{
-		blockR[i] = blockRGB[i].r;
+		blockR[j] = blockRGB[j].r;
 	}
 	
 	_HeightResult0[threadIDWithinDispatch] = CompressBC4Block(blockR);

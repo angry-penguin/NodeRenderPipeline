@@ -61,7 +61,11 @@ struct FragmentInput
 	FRAGMENT_COLOR_INPUT
 	
 	#ifdef SHADER_STAGE_FRAGMENT
-		bool isFrontFace : XIsFrontFace; // Was SV_IsFrontFace. Renamed to XIsFrontFace to avoid conflict with Fragment(...) argument in CommonSurface.hlsl.
+		#ifdef UNITY_COMPILER_DXC
+			bool isFrontFace : XIsFrontFace; // Was SV_IsFrontFace. Renamed to XIsFrontFace to avoid conflict with Fragment(...) argument in CommonSurface.hlsl.
+		#else
+			bool isFrontFace : SV_IsFrontFace;
+		#endif
 	#endif
 };
 

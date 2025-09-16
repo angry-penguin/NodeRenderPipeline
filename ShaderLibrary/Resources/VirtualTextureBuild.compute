@@ -176,26 +176,26 @@ void VirtualTextureBuild(uint2 id : SV_DispatchThreadID)
 	float weightSum = 0;
 	
 	[unroll]
-	for (uint i = 0; i < 6; i++)
+	for (uint k = 0; k < 6; k++)
 	{
-		uint layerIndex = layerIndices[i];
+		uint layerIndex = layerIndices[k];
 		float weight = 0.0;
 		
 		[unroll]
-		for (uint j = 0; j < 6; j++)
+		for (uint l = 0; l < 6; l++)
 		{
-			if (idIndices[j] == layerIndex)
+			if (idIndices[l] == layerIndex)
 			{
-				weight = max(0.0, heights[j] + transition - maxHeight);
+				weight = max(0.0, heights[l] + transition - maxHeight);
 				break;
 			}
 		}
 		
-		albedoSmoothness += albedoSmoothnesses[i] * weight;
-		mask += masks[i] * weight;
-		derivativeSum += derivatives[i] * weight;
+		albedoSmoothness += albedoSmoothnesses[k] * weight;
+		mask += masks[k] * weight;
+		derivativeSum += derivatives[k] * weight;
 		
-		weightSum += layerWeights[i] * weight;
+		weightSum += layerWeights[k] * weight;
 	}
 	
 	albedoSmoothness /= weightSum;
