@@ -15,8 +15,9 @@ public class CustomLightEditor : LightEditor
 
         if (type == LightType.Spot)
         {
-            var shapeProperty = serializedObject.FindProperty("m_Shape");
-            EditorGUILayout.PropertyField(shapeProperty);
+            // Temporarily commented out - m_Shape no longer present.
+            //var shapeProperty = serializedObject.FindProperty("m_Shape");
+            //EditorGUILayout.PropertyField(shapeProperty);
             settings.DrawInnerAndOuterSpotAngle();
         }
 
