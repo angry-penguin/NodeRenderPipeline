@@ -608,4 +608,6 @@ float3 PlanetCurvePrevious(float3 positionRWS)
 	return positionRWS;
 }
 
+float cmod(float x, float y) { return x - y * floor(x / y); }
+
 #endif
